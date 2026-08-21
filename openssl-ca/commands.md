@@ -25,3 +25,20 @@ openssl req -new -key /etc/ssl/private/server.key -out /tmp/server.csr -subj "/C
 printf 'subjectAltName=DNS:www.12286418.lab\nbasicConstraints=critical,CA:false\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\n' > /tmp/server-ext.cnf
 
 openssl x509 -req -in /tmp/server.csr -CA /root/ca/intermediate/certs/intermediate.crt -CAkey /root/ca/intermediate/private/intermediate.key -CAcreateserial -days 365 -sha256 -extfile /tmp/server-ext.cnf -out /tmp/server.crt
+
+# Server certificate
+mkdir -p /etc/ssl/private /etc/ssl/certs
+openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out /etc/ssl/private/server.key
+openssl req -new -key /etc/ssl/private/server.key -out /tmp/server.csr -subj "/C=AU/ST=QLD/O=CQUni/CN=www.12286418.lab"
+printf 'subjectAltName=DNS:www.12286418.lab\nbasicConstraints=critical,CA:false\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\n' > /tmp/server-ext.cnf
+openssl x509 -req -in /tmp/server.csr -CA /root/ca/intermediate/certs/intermediate.crt -CAkey /root/ca/intermediate/private/intermediate.key -CAcreateserial -days 365 -sha256 -extfile /tmp/server-ext.cnf -out /tmp/server.crt
+
+# Chain file
+cat /root/ca/intermediate/certs/intermediate.crt /root/ca/certs/root-ca.crt > /tmp/ca-chain.crt
+
+# Nginx fullchain + config
+cat /tmp/server.crt /tmp/ca-chain.crt > /etc/ssl/certs/server-fullchain.crt
+
+# Client-side verification
+openssl verify -CAfile /tmp/root-ca.crt -untrusted /tmp/intermediate.crt /tmp/server.crt
+curl --cacert /tmp/root-ca.crt https://www.12286418.lab/
