@@ -18,7 +18,9 @@ It contains:
 The screenshots are shown below
 
 **Chain verification:**
+
 ![openssl verify showing the certificate chain is OK](OpenSSL-CA-12286418-verify.jpg)
 
 **Successful HTTPS request:**
+
 ![curl successfully connecting over HTTPS](OpenSSL-CA-12286418-curl.jpg)
