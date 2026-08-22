@@ -53,3 +53,33 @@ The screenshots are shown below
 **Password quality policy (weak rejected, strong accepted):**
 
 ![passwd rejecting a weak password and accepting a strong one](Password-Hashing-12286418-pwquality.jpg)
+
+### Week 4 - SSH Hardening
+
+We built four hosts (Admin, Bastion, Server, Internal) on one switched LAN. we set up Ed25519 key-based authentication for both root and the pre-installed student account on Server. Then to authorize only by student, we hardened the SSh server to key only, verified by confirming key login succeeds while password and root login are both refused. Then we configured fail2ban to ban an address after 3 failed login attempts within 600 seconds. It is showed by triggering and confirming a
+ban from the Bastion host. Finally, we used an SSH local port forward through Bastion to reach an internal web service on Internal.It proves that the tunnel carries the traffic on Admin, not the Internal host directly.
+
+It contains:
+- `sshd_config` — the hardened SSH server configuration
+- `id_ed25519.pub` — the Admin host's public key
+- `commands.md` — these commands are used to address the topology, set up key authentication, harden sshd, configure fail2ban and open the SSH tunnel
+- The screenshots shows the hardened sshd_config enforcing keyonly login by student, the fail2ban ban in effect and the internal server log confirming the tunnel
+
+
+The screenshots are shown below
+
+**Network topology:**
+
+![the four-host SSH hardening topology](SSH-Hardening-12286418-network.jpg)
+
+**Hardened sshd_config enforcing key-only login by student:**
+
+![key login succeeding, password login and root login both refused](SSH-Hardening-12286418-sshd.jpg)
+
+**fail2ban banning the Bastion address after repeated failures:**
+
+![fail2ban status showing 10.10.1.20 banned](SSH-Hardening-12286418-fail2ban.jpg)
+
+**Internal server log showing the tunnel in effect:**
+
+![the internal web server log showing the request arriving from the bastion's address](SSH-Hardening-12286418-internal-log.jpg)
