@@ -31,3 +31,28 @@ fail2ban-client status sshd
 
 # Trigger from Bastion
 for user in alice bob carol dave; do ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 $user@10.10.1.30; done
+
+# Task 6 - SSH tunnel
+# On Bastion:
+/bin/start-ssh.sh
+# edited /etc/ssh/sshd_config: AllowTcpForwarding yes
+kill -HUP $(pgrep sshd)
+
+# On Admin:
+ssh-copy-id -i ~/.ssh/id_ed25519.pub root@10.10.1.20
+
+# On Internal:
+mkdir -p /var/www
+echo "<h1>Internal Server</h1>" > /var/www/index.html
+cd /var/www
+python3 -m http.server 8080 -d /var/www
+
+# Packet captures started on Admin-switch and Internal-switch links
+
+# On Admin - open tunnel and test:
+ssh -f -N -L 9090:10.10.1.40:8080 root@10.10.1.20
+pgrep -f 9090
+curl http://localhost:9090/
+
+# Stop tunnel:
+pkill -f 9090
