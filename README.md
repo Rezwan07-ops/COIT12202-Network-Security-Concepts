@@ -45,3 +45,11 @@ The screenshots are shown below
 **Cracking demonstration:**
 
 ![John the Ripper cracking the MD5, SHA-512 and yescrypt hashes](Password-Hashing-12286418-crack.jpg)
+
+**Account lockout after 5 failed attempts:**
+
+![account locked after 5 failed su attempts](Password-Hashing-12286418-lockout.jpg)
+
+**Password quality policy (weak rejected, strong accepted):**
+
+![passwd rejecting a weak password and accepting a strong one](Password-Hashing-12286418-pwquality.jpg)
