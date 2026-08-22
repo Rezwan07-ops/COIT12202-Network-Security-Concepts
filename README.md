@@ -24,3 +24,24 @@ The screenshots are shown below
 **Successful HTTPS request:**
 
 ![curl successfully connecting over HTTPS](OpenSSL-CA-12286418-curl.jpg)
+
+
+### Week 3-Password Hashing and Storage
+
+We created three users on the Target host with different password hashing algorithms and used the same password. Then we configured PAM to make a password quality requirements which is 12 characters, one uppercase letter and at least one digit. We also made account lock policy if there are 5 failed attempts for 300 seconds. these two policies were both tested. A second set of users with weak password was cracked with John the ripper to compare cracking speed in three algorithms.
+
+It contains:
+- `hashes.txt` - These are three real algorithm hashes
+- `crack-hashes.txt`- These are three intentional weak hashes which were used to show the cracking.
+- `commands.md`- These commands are used to create the hash algorithm users, configure PAM password policy and account lockout policy and to show the cracking
+- The screenshots showing the `/etc/shadow` with three hash prefixes and the John the ripper crack output
+
+The screenshots are shown below
+
+**Hash algorithms in /etc/shadow:**
+
+![the three /etc/shadow entries showing MD5, SHA-512 and yescrypt prefixes](Password-Hashing-12286418-shadow.jpg)
+
+**Cracking demonstration:**
+
+![John the Ripper cracking the MD5, SHA-512 and yescrypt hashes](Password-Hashing-12286418-crack.jpg)
